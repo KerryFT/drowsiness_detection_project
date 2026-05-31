@@ -1,0 +1,17 @@
+# Bỏ qua dữ liệu lớn
+data/
+dataset/
+*.csv
+*.zip
+
+# Bỏ qua trọng số mô hình (weights)
+weights/
+*.pt
+*.pth
+*.h5
+
+# Bỏ qua file rác của Python và hệ thống
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
