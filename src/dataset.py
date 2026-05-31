@@ -18,7 +18,8 @@ class DrowsinessSequenceDataset(Dataset):
         self.seq_len = seq_len
         self.transform = transform
         
-        self.classes = {"0_alert": 0, "5_low_vigilant": 1, "10_drowsy": 2}
+        # Cập nhật từ 3 class xuống 2 class theo thực tế của dataset
+        self.classes = {"active": 0, "fatigue": 1}
         self.sequences = []
         self.labels = []
         
