@@ -3,6 +3,7 @@
 import os
 import glob
 import torch
+from torchvision.transforms import v2
 from torch.utils.data import Dataset, DataLoader
 from torchvision.io import read_image
 from .config import SEQ_LENGTH, STRIDE, IMAGE_SIZE
@@ -47,17 +48,27 @@ class DrowsinessSequenceDataset(Dataset):
     def __len__(self):
         return len(self.sequences)
 
+# Đảm bảo bạn đã import v2 ở đầu file src/dataset.py:
+
+
     def __getitem__(self, idx):
         seq_paths = self.sequences[idx]
         label = self.labels[idx]
         
         frames = []
+        # Khởi tạo công cụ ép kích thước chuẩn
+        resize_op = v2.Resize((256, 256), antialias=True)
+        
         for path in seq_paths:
             # Đọc ảnh thành tensor [C, H, W]
             img = read_image(path)
+            
+            # ÉP ĐỒNG BỘ KÍCH THƯỚC NGAY LÚC NÀY
+            img = resize_op(img)
+            
             frames.append(img)
             
-        # Stack lại thành tensor [T, C, H, W]
+        # Lúc này 8 ảnh chắc chắn cùng size [3, 256, 256], stack sẽ mượt mà 100%
         video_tensor = torch.stack(frames) 
         
         if self.transform:
