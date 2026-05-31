@@ -66,11 +66,18 @@ class DrowsinessSequenceDataset(Dataset):
         return video_tensor, label
 
 # Hàm hỗ trợ tạo DataLoader chuẩn
+# Cập nhật hàm get_dataloaders trong src/dataset.py
+
 def get_dataloaders(data_dir, batch_size=16, num_workers=4):
+    # Khởi tạo 3 Dataset
     train_dataset = DrowsinessSequenceDataset(data_dir, split="train", transform=get_transforms(is_train=True))
-    dev_dataset = DrowsinessSequenceDataset(data_dir, split="dev", transform=get_transforms(is_train=False))
+    val_dataset = DrowsinessSequenceDataset(data_dir, split="val", transform=get_transforms(is_train=False))
+    test_dataset = DrowsinessSequenceDataset(data_dir, split="test", transform=get_transforms(is_train=False))
     
+    # Khởi tạo 3 DataLoader
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
-    dev_loader = DataLoader(dev_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+    # Tập Val và Test không cần trộn (shuffle=False) để tiết kiệm tài nguyên
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
     
-    return train_loader, dev_loader
+    return train_loader, val_loader, test_loader
